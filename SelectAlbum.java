@@ -55,15 +55,19 @@ public class SelectAlbum extends JFrame {
 
     // 곡 표지와 제목을 나타낼 패널을 추가하는 메소드
     private void addSongPanel(String title, String song, String imagePath) {
-        JPanel panel = new JPanel() {
-            Image coverImage = new ImageIcon(imagePath).getImage();
+        // 앨범 이미지를 버튼으로 설정
+        JButton albumButton = new JButton(new ImageIcon(imagePath));
+        albumButton.setPreferredSize(new Dimension(200, 200)); // 버튼 크기 설정
+        albumButton.setContentAreaFilled(false); // 기본 버튼 배경 제거2
+        albumButton.setBorderPainted(false); // 버튼 경계선 제거
+        albumButton.setFocusPainted(false); // 포커스 시 경계선 제거
 
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                g.drawImage(coverImage, getWidth() / 2 - 150, getHeight() / 2 - 150, 300, 300, this); // 앨범 이미지 크기 300x300으로 설정
-            }
-        };
+        // 버튼 클릭 시 해당 앨범 정보 출력
+        albumButton.addActionListener(e -> {
+            JOptionPane.showMessageDialog(this, "Selected album: " + title + "\nSong: " + song);
+        });
+
+        JPanel panel = new JPanel();
         panel.setOpaque(false); // 곡 패널도 투명하게 설정
         panel.setLayout(new BorderLayout());
 
@@ -73,11 +77,13 @@ public class SelectAlbum extends JFrame {
         labelPanel.setOpaque(false); // 배경 투명하게 설정
         labelPanel.setAlignmentX(Component.CENTER_ALIGNMENT); // 중앙 정렬 설정
 
+        // titleLabel
         JLabel titleLabel = new JLabel(title, SwingConstants.CENTER);
         titleLabel.setFont(new Font("Serif", Font.PLAIN, 60));
         titleLabel.setForeground(Color.WHITE);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT); // 중앙 정렬
 
+        // songLabel
         JLabel songLabel = new JLabel(song, SwingConstants.CENTER);
         songLabel.setFont(new Font("Serif", Font.BOLD, 90));
         songLabel.setForeground(Color.WHITE);
@@ -91,7 +97,8 @@ public class SelectAlbum extends JFrame {
         southPanel.setOpaque(false); // 투명하게 설정
         southPanel.add(labelPanel);
 
-        panel.add(southPanel, BorderLayout.SOUTH);
+        panel.add(albumButton, BorderLayout.CENTER); // 앨범 버튼을 중앙에 추가
+        panel.add(southPanel, BorderLayout.SOUTH); // 제목과 노래 레이블 추가
 
         cardPanel.add(panel);
     }
