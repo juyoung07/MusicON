@@ -14,7 +14,7 @@ public class SelectAlbum extends JFrame {
 
         // 배경 이미지를 표시할 JPanel 생성
         JPanel backgroundPanel = new JPanel() {
-            Image backgroundImage = new ImageIcon("./Img/Bg/BgSongselection.png").getImage(); // 배경 이미지 로드
+            Image backgroundImage = new ImageIcon("./img/bg/BgSongselection.png").getImage(); // 배경 이미지 로드
 
             @Override
             protected void paintComponent(Graphics g) {
@@ -30,9 +30,9 @@ public class SelectAlbum extends JFrame {
         cardPanel.setOpaque(false); // 카드 패널을 투명하게 설정
 
         // 각 노래 패널 추가
-        addSongPanel("Kinky Boots", "Land of Lola", "Img\\Album\\AlbumKinkyboots.png");
-        addSongPanel("src.musicOn.Wicked", "Defying Gravity", "Img\\Album\\AlbumWicked.png");
-        addSongPanel("src.musicOn.Chicago", "All That Jazz", "Img\\Album\\AlbumChicago.png");
+        addSongPanel("Kinky Boots", "Land of Lola", "../img/Album/Kinkyboots.png");
+        addSongPanel("src.musicOn.Wicked", "Defying Gravity", "../img/Album/AlbumWicked.png");
+        addSongPanel("src.musicOn.Chicago", "All That Jazz", "../img/Album/AlbumChicago.png");
 
         backgroundPanel.add(cardPanel, BorderLayout.CENTER);
 
