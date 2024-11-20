@@ -32,7 +32,7 @@ public class Main extends JFrame {
             try {
                 // 절대 경로로 변경
                 String currentPath = System.getProperty("user.dir");
-                File imagePath = new File(currentPath + "/src/Img/Bg/BgStart.png");
+                File imagePath = new File(currentPath + "/src/img/bg/BgStart.png");
                 // 파일 존재 여부 확인을 위한 디버깅 출력
                 System.out.println("이미지 파일 경로: " + imagePath.getAbsolutePath());
                 System.out.println("파일 존재 여부: " + imagePath.exists());
