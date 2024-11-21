@@ -3,20 +3,29 @@ package src.musicOn;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
 
 public class Main extends JFrame {
+    private CardLayout cardLayout;
+    private JPanel mainPanel;
+
     public Main() {
         setTitle("MusicOn");
         setSize(1200, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
+        cardLayout = new CardLayout();
+        mainPanel = new JPanel(cardLayout);
+
         GamePanel gamePanel = new GamePanel();
-        add(gamePanel);
+        SelectAlbum selectAlbum = new SelectAlbum();
+
+        mainPanel.add(gamePanel, "GamePanel");
+        mainPanel.add(selectAlbum, "SelectAlbum");
+
+        add(mainPanel);
         setVisible(true);
     }
 
@@ -25,66 +34,60 @@ public class Main extends JFrame {
         private JButton startButton, endUpButton;
 
         public GamePanel() {
-            setLayout(null); // Absolute Positioning 사용
+            setLayout(null);
             loadBackgroundImage();
             loadButtonImages();
 
-            // 버튼 크기 조정 및 위치 설정
-            startButton.setBounds(50, 50, startButton.getPreferredSize().width, startButton.getPreferredSize().height);
-            endUpButton.setBounds(50, 150, endUpButton.getPreferredSize().width, endUpButton.getPreferredSize().height);
+            // 버튼 위치 설정
+            setButtonPosition(startButton, 65, 230); // Start 버튼 위치
+            setButtonPosition(endUpButton, 65, 400); // End 버튼 위치
 
             add(startButton);
             add(endUpButton);
 
-            startButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    SwingUtilities.invokeLater(() -> new SelectAlbum()); // 새로운 SelectAlbum 창 생성
-                }
-            });
-
-            endUpButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    System.exit(0); // 프로그램 종료
-                }
-            });
+            startButton.addActionListener(e -> cardLayout.show(mainPanel, "SelectAlbum"));
+            endUpButton.addActionListener(e -> System.exit(0));
         }
 
         private void loadBackgroundImage() {
-            backgroundImage = loadImage("../img/bg/BgStart.png"); // 클래스패스 기준 경로 사용
-            if (backgroundImage == null) {
-                System.err.println("배경 이미지 로드 실패!");
-            }
+            backgroundImage = loadImage("../img/bg/BgStart.png");
         }
 
         private void loadButtonImages() {
             Image startImage = loadImage("../img/btn/BtnStart.png");
             Image endImage = loadImage("../img/btn/BtnEnd.png");
 
-            if(startImage != null && endImage != null) {
-                startButton = new JButton(new ImageIcon(startImage));
-                endUpButton = new JButton(new ImageIcon(endImage));
+            if (startImage != null && endImage != null) {
+                startButton = createTransparentButton(new ImageIcon(startImage));
+                endUpButton = createTransparentButton(new ImageIcon(endImage));
             } else {
-                System.err.println("버튼 이미지 로드 실패!");
-                startButton = new JButton("Start"); // 이미지 로드 실패시 기본 버튼 표시
+                startButton = new JButton("Start");
                 endUpButton = new JButton("End");
             }
         }
 
-        // 클래스 패스로부터 이미지 로드
+        private JButton createTransparentButton(ImageIcon icon) {
+            JButton button = new JButton(icon);
+            button.setContentAreaFilled(false); // 배경색 제거
+            button.setBorderPainted(false);    // 테두리 제거
+            button.setFocusPainted(false);    // 포커스 표시 제거
+            return button;
+        }
+
+        // 버튼 위치를 설정하는 메서드
+        private void setButtonPosition(JButton button, int x, int y) {
+            button.setBounds(x, y, button.getPreferredSize().width, button.getPreferredSize().height);
+        }
+
         private Image loadImage(String path) {
             try (InputStream inputStream = getClass().getResourceAsStream(path)) {
-                if (inputStream == null) {
-                    System.err.println("이미지 파일을 찾을 수 없습니다: " + path);
-                    return null;
+                if (inputStream != null) {
+                    return ImageIO.read(inputStream);
                 }
-                return ImageIO.read(inputStream);
             } catch (IOException e) {
-                System.err.println("이미지 로드 실패: " + e.getMessage());
                 e.printStackTrace();
-                return null;
             }
+            return null;
         }
 
         @Override
@@ -96,7 +99,9 @@ public class Main extends JFrame {
         }
     }
 
+
+
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new Main());
+        SwingUtilities.invokeLater(Main::new);
     }
 }
