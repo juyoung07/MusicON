@@ -2,6 +2,9 @@ package src.musicOn;
 
 import javax.swing.*;
 import java.awt.*;
+import javax.swing.AbstractAction;
+import java.awt.event.ActionEvent;
+
 
 public class SelectAlbum extends JPanel {
     private CardLayout cardLayout;
@@ -34,22 +37,10 @@ public class SelectAlbum extends JPanel {
 
         backgroundPanel.add(cardPanel, BorderLayout.CENTER);
 
-        // 좌우 이동 버튼 생성
-        JButton leftButton = new JButton("<");
-        leftButton.addActionListener(e -> switchCard(false));
-        JButton rightButton = new JButton(">");
-        rightButton.addActionListener(e -> switchCard(true));
-
-        // 버튼 패널을 만들고 버튼을 추가
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setOpaque(false); // 버튼 패널도 투명하게 설정
-        buttonPanel.setLayout(new BorderLayout());
-        buttonPanel.add(leftButton, BorderLayout.WEST);
-        buttonPanel.add(rightButton, BorderLayout.EAST);
-
-        backgroundPanel.add(buttonPanel, BorderLayout.SOUTH); // 버튼 패널을 배경 패널의 남쪽에 추가
-
         add(backgroundPanel, BorderLayout.CENTER); // 메인 패널에 추가
+
+        // 키 바인딩 설정
+        setupKeyBindings();
     }
 
     // 곡 표지와 제목을 나타낼 패널을 추가하는 메소드
@@ -92,6 +83,27 @@ public class SelectAlbum extends JPanel {
         panel.add(southPanel, BorderLayout.SOUTH);
 
         cardPanel.add(panel);
+    }
+
+    // 키 바인딩 설정 메소드
+    private void setupKeyBindings() {
+        // 카드 패널에서 동작을 설정
+        cardPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("LEFT"), "previousCard");
+        cardPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("RIGHT"), "nextCard");
+
+        cardPanel.getActionMap().put("previousCard", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                switchCard(false);
+            }
+        });
+
+        cardPanel.getActionMap().put("nextCard", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                switchCard(true);
+            }
+        });
     }
 
     // 좌우 이동 버튼에 따른 패널 전환 메소드
