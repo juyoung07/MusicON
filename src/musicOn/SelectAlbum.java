@@ -4,11 +4,15 @@ import javax.swing.*;
 import java.awt.*;
 import javax.swing.AbstractAction;
 import java.awt.event.ActionEvent;
-
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 public class SelectAlbum extends JPanel {
     private CardLayout cardLayout;
     private JPanel cardPanel;
+    private Chicago chicagoPanel;
+    private KinkyBoots kinkyBootsPanel;
+    private Wicked wickedPanel;
 
     public SelectAlbum() {
         setLayout(new BorderLayout()); // 메인 패널 레이아웃 설정
@@ -30,21 +34,24 @@ public class SelectAlbum extends JPanel {
         cardPanel = new JPanel(cardLayout);
         cardPanel.setOpaque(false); // 카드 패널을 투명하게 설정
 
+        // 각각의 패널 생성
+        chicagoPanel = new Chicago();
+        kinkyBootsPanel = new KinkyBoots();
+        wickedPanel = new Wicked();
+
         // 각 노래 패널 추가
-        addSongPanel("Kinky Boots", "Land of Lola", "../img/album/AlbumKinkyboots.png");
-        addSongPanel("Wicked", "Defying Gravity", "../img/album/AlbumWicked.png");
-        addSongPanel("Chicago", "All That Jazz", "../img/album/AlbumChicago.png");
+        addSongPanel("Kinky Boots", "Land of Lola", "../img/album/AlbumKinkyboots.png", kinkyBootsPanel);
+        addSongPanel("Wicked", "Defying Gravity", "../img/album/AlbumWicked.png", wickedPanel);
+        addSongPanel("Chicago", "All That Jazz", "../img/album/AlbumChicago.png", chicagoPanel);
 
         backgroundPanel.add(cardPanel, BorderLayout.CENTER);
-
         add(backgroundPanel, BorderLayout.CENTER); // 메인 패널에 추가
-
         // 키 바인딩 설정
         setupKeyBindings();
     }
 
     // 곡 표지와 제목을 나타낼 패널을 추가하는 메소드
-    private void addSongPanel(String title, String song, String imagePath) {
+    private void addSongPanel(String title, String song, String imagePath, JPanel specialPanel) {
         // 앨범 이미지를 버튼으로 설정
         JButton albumButton = new JButton(new ImageIcon(getClass().getResource(imagePath)));
         albumButton.setPreferredSize(new Dimension(200, 200)); // 버튼 크기 설정
@@ -53,12 +60,15 @@ public class SelectAlbum extends JPanel {
         albumButton.setFocusPainted(false);
 
         albumButton.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, "Selected album: " + title + "\nSong: " + song);
+            if (specialPanel != null) {
+                cardLayout.show(cardPanel, title);
+            } else {
+                JOptionPane.showMessageDialog(this, "Selected album: " + title + "\nSong: " + song);
+            }
         });
 
-        JPanel panel = new JPanel();
+        JPanel panel = new JPanel(new BorderLayout());
         panel.setOpaque(false);
-        panel.setLayout(new BorderLayout());
 
         JPanel labelPanel = new JPanel();
         labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.Y_AXIS));
@@ -75,14 +85,15 @@ public class SelectAlbum extends JPanel {
         labelPanel.add(titleLabel);
         labelPanel.add(songLabel);
 
-        JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        southPanel.setOpaque(false);
-        southPanel.add(labelPanel);
-
         panel.add(albumButton, BorderLayout.CENTER);
-        panel.add(southPanel, BorderLayout.SOUTH);
+        panel.add(labelPanel, BorderLayout.SOUTH);
 
-        cardPanel.add(panel);
+        cardPanel.add(panel, title);
+
+        if (specialPanel != null) {
+            cardPanel.add(specialPanel, title);
+        }
+
     }
 
     // 키 바인딩 설정 메소드
