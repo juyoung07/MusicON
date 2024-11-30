@@ -13,6 +13,7 @@ public class SelectAlbum extends JPanel {
     private Chicago chicagoPanel;
     private KinkyBoots kinkyBootsPanel;
     private Wicked wickedPanel;
+    private String currentAlbumKey;
 
     public SelectAlbum() {
         setLayout(new BorderLayout()); // 메인 패널 레이아웃 설정
@@ -33,6 +34,8 @@ public class SelectAlbum extends JPanel {
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
         cardPanel.setOpaque(false); // 카드 패널을 투명하게 설정
+        cardPanel.setFocusable(true);
+        cardPanel.requestFocusInWindow();
 
         // 각각의 패널 생성
         chicagoPanel = new Chicago();
@@ -44,8 +47,12 @@ public class SelectAlbum extends JPanel {
         addSongPanel("Wicked", "Defying Gravity", "../img/album/AlbumWicked.png", wickedPanel);
         addSongPanel("Kinky Boots", "Land of Lola", "../img/album/AlbumKinkyboots.png", kinkyBootsPanel);
 
+        // currentAlbumKey 초기화
+        currentAlbumKey = "Chicago";
+
         backgroundPanel.add(cardPanel, BorderLayout.CENTER);
         add(backgroundPanel, BorderLayout.CENTER); // 메인 패널에 추가
+
         // 키 바인딩 설정
         setupKeyBindings();
     }
@@ -60,11 +67,8 @@ public class SelectAlbum extends JPanel {
         albumButton.setFocusPainted(false);
 
         albumButton.addActionListener(e -> {
-            if (specialPanel != null) {
-                cardLayout.show(cardPanel, title);
-            } else {
-                JOptionPane.showMessageDialog(this, "Selected album: " + title + "\nSong: " + song);
-            }
+            currentAlbumKey = title; // 클릭 시 현재 앨범 키 업데이트
+            cardLayout.show(cardPanel, title); // specialPanel을 포함한 전체 패널 표시
         });
 
         JPanel panel = new JPanel(new BorderLayout());
@@ -88,10 +92,9 @@ public class SelectAlbum extends JPanel {
         panel.add(albumButton, BorderLayout.CENTER);
         panel.add(labelPanel, BorderLayout.SOUTH);
 
-        cardPanel.add(panel, title);
-
+        cardPanel.add(panel, title + "Album"); // 앨범 선택 패널 추가 - 키 값: title + "Album"
         if (specialPanel != null) {
-            cardPanel.add(specialPanel, title);
+            cardPanel.add(specialPanel, title); // specialPanel 추가 - 키 값: title
         }
 
     }
@@ -119,10 +122,30 @@ public class SelectAlbum extends JPanel {
 
     // 좌우 이동 버튼에 따른 패널 전환 메소드
     private void switchCard(boolean forward) {
-        if (forward) {
-            cardLayout.next(cardPanel);
-        } else {
-            cardLayout.previous(cardPanel);
+        String nextAlbumKey = findNextAlbumKey(forward);
+        cardLayout.show(cardPanel, nextAlbumKey + "Album"); // 앨범 선택 패널만 표시
+        currentAlbumKey = nextAlbumKey;
+    }
+
+
+    private String findNextAlbumKey(boolean forward) {
+        String[] albumKeys = {"Chicago", "Wicked", "Kinky Boots"};
+        int currentIndex = -1;
+        for (int i = 0; i < albumKeys.length; i++) {
+            if (albumKeys[i].equals(currentAlbumKey)) {
+                currentIndex = i;
+                break;
+            }
         }
+
+        int nextIndex;
+        if (forward) {
+            nextIndex = (currentIndex + 1) % albumKeys.length;
+        } else {
+            nextIndex = (currentIndex - 1 + albumKeys.length) % albumKeys.length;
+        }
+
+        return albumKeys[nextIndex];
+
     }
 }
