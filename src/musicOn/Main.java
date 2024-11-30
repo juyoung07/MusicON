@@ -12,7 +12,7 @@ public class Main extends JFrame {
 
     public Main() {
         setTitle("MusicOn");
-        setSize(1200, 800);
+        setSize(1440, 1024);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -39,8 +39,8 @@ public class Main extends JFrame {
             loadButtonImages();
 
             // 버튼 위치 설정
-            setButtonPosition(startButton, 65, 230); // Start 버튼 위치
-            setButtonPosition(endUpButton, 65, 400); // End 버튼 위치
+            setButtonPosition(startButton, 65, 373); // Start 버튼 위치
+            setButtonPosition(endUpButton, 65, 566); // End 버튼 위치
 
             add(startButton);
             add(endUpButton);

@@ -40,9 +40,9 @@ public class SelectAlbum extends JPanel {
         wickedPanel = new Wicked();
 
         // 각 노래 패널 추가
-        addSongPanel("Kinky Boots", "Land of Lola", "../img/album/AlbumKinkyboots.png", kinkyBootsPanel);
-        addSongPanel("Wicked", "Defying Gravity", "../img/album/AlbumWicked.png", wickedPanel);
         addSongPanel("Chicago", "All That Jazz", "../img/album/AlbumChicago.png", chicagoPanel);
+        addSongPanel("Wicked", "Defying Gravity", "../img/album/AlbumWicked.png", wickedPanel);
+        addSongPanel("Kinky Boots", "Land of Lola", "../img/album/AlbumKinkyboots.png", kinkyBootsPanel);
 
         backgroundPanel.add(cardPanel, BorderLayout.CENTER);
         add(backgroundPanel, BorderLayout.CENTER); // 메인 패널에 추가
