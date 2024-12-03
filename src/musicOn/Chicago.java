@@ -220,7 +220,9 @@ public class Chicago extends JPanel implements ActionListener {
         g.setColor(Color.GREEN);
         g.drawLine(0, 700, PANEL_WIDTH, 700);
 
-        g.setColor(Color.RED);
+        Color customColor = new Color(0xA3060F); // #FF5733 색상
+        g.setColor(customColor);
+
         for (Block block : blocks) {
             g.fillRect(block.x, block.y, block.width, block.height);
         }
