@@ -2,23 +2,27 @@ package src.musicOn;
 
 import javax.swing.*;
 import java.awt.*;
-import javax.swing.AbstractAction;
 import java.awt.event.ActionEvent;
-import java.io.IOException;
-import javax.imageio.ImageIO;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SelectAlbum extends JPanel {
     private CardLayout cardLayout;
     private JPanel cardPanel;
-    private Chicago chicagoPanel;
-    private KinkyBoots kinkyBootsPanel;
-    private Wicked wickedPanel;
     private String currentAlbumKey;
-    private boolean isInAlbumSelection = true; // 현재 앨범 선택 화면인지 확인하는 플래그
+    private List<String> albumKeys;
+    private int currentIndex;
 
     public SelectAlbum() {
         setLayout(new BorderLayout());
 
+        // 앨범 키 초기화
+        albumKeys = new ArrayList<>();
+        currentIndex = 0;
+
+        // 배경 설정
         JPanel backgroundPanel = new JPanel() {
             Image backgroundImage = new ImageIcon(getClass().getResource("../img/bg/BgSongselection.png")).getImage();
 
@@ -30,48 +34,68 @@ public class SelectAlbum extends JPanel {
         };
         backgroundPanel.setLayout(new BorderLayout());
 
+        // 카드 레이아웃 설정
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
         cardPanel.setOpaque(false);
-        cardPanel.setFocusable(true);
-        cardPanel.requestFocusInWindow();
 
-        chicagoPanel = new Chicago();
-        kinkyBootsPanel = new KinkyBoots();
-        wickedPanel = new Wicked();
+        // 앨범 추가
+        addAlbumButton("Chicago", "All That Jazz", "../img/album/AlbumChicago.png", new Chicago());
+        addAlbumButton("Wicked", "Defying Gravity", "../img/album/AlbumWicked.png", null);
+        addAlbumButton("Kinky Boots", "Land of Lola", "../img/album/AlbumKinkyboots.png", null);
 
-        addSongPanel("Chicago", "All That Jazz", "../img/album/AlbumChicago.png", chicagoPanel);
-        addSongPanel("Wicked", "Defying Gravity", "../img/album/AlbumWicked.png", wickedPanel);
-        addSongPanel("Kinky Boots", "Land of Lola", "../img/album/AlbumKinkyboots.png", kinkyBootsPanel);
+        // 키보드 이벤트 처리
+        setFocusable(true);
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                    moveToNextAlbum();
+                } else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+                    moveToPreviousAlbum();
+                }
+            }
+        });
 
-        currentAlbumKey = "Chicago";
+        currentAlbumKey = albumKeys.get(currentIndex);
+        cardLayout.show(cardPanel, currentAlbumKey + "Album");
 
         backgroundPanel.add(cardPanel, BorderLayout.CENTER);
         add(backgroundPanel, BorderLayout.CENTER);
-
-        setupKeyBindings();
     }
 
-    private void addSongPanel(String title, String song, String imagePath, JPanel specialPanel) {
+    private void addAlbumButton(String title, String song, String imagePath, JPanel gamePanel) {
+        albumKeys.add(title);
+
         JButton albumButton = new JButton(new ImageIcon(getClass().getResource(imagePath)));
-        albumButton.setPreferredSize(new Dimension(200, 200));
         albumButton.setContentAreaFilled(false);
         albumButton.setBorderPainted(false);
         albumButton.setFocusPainted(false);
 
         albumButton.addActionListener(e -> {
-            isInAlbumSelection = false; // 게임 화면으로 전환 시 플래그 변경
+            // currentAlbumKey 업데이트
             currentAlbumKey = title;
-            cardLayout.show(cardPanel, title);
+            currentIndex = albumKeys.indexOf(title);
+
+            // 게임 패널로 전환
+            if (gamePanel != null) {
+                JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+                frame.getContentPane().removeAll();
+                frame.getContentPane().add(gamePanel);
+                frame.revalidate();
+                frame.repaint();
+
+                // 게임 시작 호출
+                if (gamePanel instanceof Chicago) {
+                    ((Chicago) gamePanel).startGame();
+                }
+            }
         });
 
         JPanel panel = new JPanel(new BorderLayout());
         panel.setOpaque(false);
 
-        JPanel labelPanel = new JPanel();
-        labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.Y_AXIS));
-        labelPanel.setOpaque(false);
-
+        // 앨범 정보 표시
         JLabel titleLabel = new JLabel(title, SwingConstants.CENTER);
         titleLabel.setFont(new Font("Serif", Font.PLAIN, 60));
         titleLabel.setForeground(Color.WHITE);
@@ -80,6 +104,9 @@ public class SelectAlbum extends JPanel {
         songLabel.setFont(new Font("Serif", Font.BOLD, 90));
         songLabel.setForeground(Color.WHITE);
 
+        JPanel labelPanel = new JPanel();
+        labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.Y_AXIS));
+        labelPanel.setOpaque(false);
         labelPanel.add(titleLabel);
         labelPanel.add(songLabel);
 
@@ -87,57 +114,17 @@ public class SelectAlbum extends JPanel {
         panel.add(labelPanel, BorderLayout.SOUTH);
 
         cardPanel.add(panel, title + "Album");
-        if (specialPanel != null) {
-            cardPanel.add(specialPanel, title);
-        }
     }
 
-    private void setupKeyBindings() {
-        cardPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("LEFT"), "previousCard");
-        cardPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("RIGHT"), "nextCard");
-
-        cardPanel.getActionMap().put("previousCard", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (isInAlbumSelection) { // 앨범 선택 화면일 때만 작동
-                    switchCard(false);
-                }
-            }
-        });
-
-        cardPanel.getActionMap().put("nextCard", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (isInAlbumSelection) { // 앨범 선택 화면일 때만 작동
-                    switchCard(true);
-                }
-            }
-        });
+    private void moveToNextAlbum() {
+        currentIndex = (currentIndex + 1) % albumKeys.size();
+        currentAlbumKey = albumKeys.get(currentIndex);
+        cardLayout.show(cardPanel, currentAlbumKey + "Album");
     }
 
-    private void switchCard(boolean forward) {
-        String nextAlbumKey = findNextAlbumKey(forward);
-        cardLayout.show(cardPanel, nextAlbumKey + "Album");
-        currentAlbumKey = nextAlbumKey;
-    }
-
-    private String findNextAlbumKey(boolean forward) {
-        String[] albumKeys = {"Chicago", "Wicked", "Kinky Boots"};
-        int currentIndex = -1;
-        for (int i = 0; i < albumKeys.length; i++) {
-            if (albumKeys[i].equals(currentAlbumKey)) {
-                currentIndex = i;
-                break;
-            }
-        }
-
-        int nextIndex;
-        if (forward) {
-            nextIndex = (currentIndex + 1) % albumKeys.length;
-        } else {
-            nextIndex = (currentIndex - 1 + albumKeys.length) % albumKeys.length;
-        }
-
-        return albumKeys[nextIndex];
+    private void moveToPreviousAlbum() {
+        currentIndex = (currentIndex - 1 + albumKeys.size()) % albumKeys.size();
+        currentAlbumKey = albumKeys.get(currentIndex);
+        cardLayout.show(cardPanel, currentAlbumKey + "Album");
     }
 }
