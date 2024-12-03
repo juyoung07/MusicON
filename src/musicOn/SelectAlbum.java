@@ -40,8 +40,8 @@ public class SelectAlbum extends JPanel {
 
         // 앨범 추가
         addAlbumButton("Chicago", "All That Jazz", "../img/album/AlbumChicago.png", new Chicago());
-        addAlbumButton("Wicked", "Defying Gravity", "../img/album/AlbumWicked.png", null);
-        addAlbumButton("Kinky Boots", "Land of Lola", "../img/album/AlbumKinkyboots.png", null);
+        addAlbumButton("Wicked", "Defying Gravity", "../img/album/AlbumWicked.png", new Wicked());
+        addAlbumButton("Kinky Boots", "Land of Lola", "../img/album/AlbumKinkyboots.png", new KinkyBoots());
 
         // 키 바인딩 설정
         setupKeyBindings();
@@ -77,6 +77,12 @@ public class SelectAlbum extends JPanel {
                 // 게임 시작 호출
                 if (gamePanel instanceof Chicago) {
                     ((Chicago) gamePanel).startGame();
+                }
+                else if (gamePanel instanceof Wicked){
+                    ((Wicked) gamePanel).startGame();
+                }
+                else if (gamePanel instanceof KinkyBoots){
+                    ((KinkyBoots) gamePanel).startGame();
                 }
             }
         });
