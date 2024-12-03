@@ -3,8 +3,7 @@ package src.musicOn;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.KeyEvent; // KeyEvent를 import합니다.
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,18 +43,8 @@ public class SelectAlbum extends JPanel {
         addAlbumButton("Wicked", "Defying Gravity", "../img/album/AlbumWicked.png", null);
         addAlbumButton("Kinky Boots", "Land of Lola", "../img/album/AlbumKinkyboots.png", null);
 
-        // 키보드 이벤트 처리
-        setFocusable(true);
-        addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-                    moveToNextAlbum();
-                } else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-                    moveToPreviousAlbum();
-                }
-            }
-        });
+        // 키 바인딩 설정
+        setupKeyBindings();
 
         currentAlbumKey = albumKeys.get(currentIndex);
         cardLayout.show(cardPanel, currentAlbumKey + "Album");
@@ -114,6 +103,28 @@ public class SelectAlbum extends JPanel {
         panel.add(labelPanel, BorderLayout.SOUTH);
 
         cardPanel.add(panel, title + "Album");
+    }
+
+    private void setupKeyBindings() {
+        InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap actionMap = getActionMap();
+
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "moveRight");
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "moveLeft");
+
+        actionMap.put("moveRight", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                moveToNextAlbum();
+            }
+        });
+
+        actionMap.put("moveLeft", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                moveToPreviousAlbum();
+            }
+        });
     }
 
     private void moveToNextAlbum() {
