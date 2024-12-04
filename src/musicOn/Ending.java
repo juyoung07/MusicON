@@ -63,31 +63,26 @@ public class Ending extends JPanel {
     }
 
     private void addButtons() {
-        // Home Button
+// Home Button
         ImageIcon homeIcon = new ImageIcon("src/img/btn/BtnHome.png");
-        Image homeScaled = homeIcon.getImage().getScaledInstance(105, 98, Image.SCALE_SMOOTH); // 크기 변경
+        Image homeScaled = homeIcon.getImage().getScaledInstance(105, 98, Image.SCALE_SMOOTH);
         JButton homeButton = new JButton(new ImageIcon(homeScaled));
         homeButton.setBorderPainted(false);
         homeButton.setContentAreaFilled(false);
         homeButton.setFocusPainted(false);
         homeButton.setBounds(1290, 650, 105, 98);
-        homeButton.addActionListener(e -> {
-            // Add home button functionality here
-        });
-        this.add(homeButton);
 
-        // Retry Button
-        ImageIcon retryIcon = new ImageIcon("src/img/btn/BtnRetry.png");
-        Image retryScaled = retryIcon.getImage().getScaledInstance(105, 98, Image.SCALE_SMOOTH); // 크기 변경
-        JButton retryButton = new JButton(new ImageIcon(retryScaled));
-        retryButton.setBorderPainted(false);
-        retryButton.setContentAreaFilled(false);
-        retryButton.setFocusPainted(false);
-        retryButton.setBounds(1150, 650, 105, 98);
-        retryButton.addActionListener(e -> {
-            // Add retry button functionality here
+        homeButton.addActionListener(e -> {
+            // Home 버튼 클릭 시 Main 화면으로 이동
+            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            frame.getContentPane().removeAll(); // 모든 컴포넌트 제거
+            Main mainPanel = new Main(); // Main 객체 생성
+            frame.getContentPane().add(mainPanel); // Main 패널 추가
+            frame.revalidate(); // 레이아웃 재정렬
+            frame.repaint(); // 화면 갱신
         });
-        this.add(retryButton);
+
+        this.add(homeButton);
     }
 
     @Override
