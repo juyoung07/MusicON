@@ -10,10 +10,6 @@ public class Main extends JFrame {
     private CardLayout cardLayout;
     private JPanel mainPanel;
 
-    public Component getMainPanel() {
-        return mainPanel;
-    }
-
     public Main() {
         setTitle("MusicOn");
         setSize(1440, 1024);
@@ -102,8 +98,6 @@ public class Main extends JFrame {
             }
         }
     }
-
-
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(Main::new);

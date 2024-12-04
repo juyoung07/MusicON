@@ -19,7 +19,6 @@ public class Wicked extends JPanel implements ActionListener {
     private Timer timer;
     private Random random = new Random();
 
-    private JLabel feedbackLabel; // 피드백 텍스트를 위한 JLabel
     private JLabel scoreLabel; // 점수를 표시할 JLabel
     private Image backgroundImage; // 배경 이미지
     private Clip backgroundMusicClip; // 배경 음악 클립
@@ -39,14 +38,6 @@ public class Wicked extends JPanel implements ActionListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        // 피드백을 화면에 표시할 JLabel 설정
-        feedbackLabel = new JLabel("", SwingConstants.CENTER);
-        feedbackLabel.setFont(new Font("DungGeunMo", Font.BOLD, 40));
-        feedbackLabel.setForeground(Color.WHITE);
-        feedbackLabel.setBounds(0, PANEL_HEIGHT / 2, PANEL_WIDTH, 50);
-        this.setLayout(null);
-        this.add(feedbackLabel);
 
         // 점수 표시용 JLabel 설정
         scoreLabel = new JLabel("Score: 0", SwingConstants.CENTER);
@@ -84,7 +75,6 @@ public class Wicked extends JPanel implements ActionListener {
             }
         });
     }
-
 
     // 배경 음악 재생
     private void playBackgroundMusic(String filePath) {
@@ -168,11 +158,10 @@ public class Wicked extends JPanel implements ActionListener {
 
     // 피드백 텍스트와 점수 설정
     private void setFeedback(String text, int point) {
-        feedbackLabel.setText(text);
         score += point;
         scoreLabel.setText("Score: " + score);
 
-        Timer timer = new Timer(500, e -> feedbackLabel.setText(""));
+        Timer timer = new Timer(500, e -> {});
         timer.setRepeats(false);
         timer.start();
     }
@@ -195,7 +184,6 @@ public class Wicked extends JPanel implements ActionListener {
         blocks.removeAll(toRemove);
         repaint();
     }
-
 
     @Override
     protected void paintComponent(Graphics g) {
