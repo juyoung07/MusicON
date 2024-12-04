@@ -71,12 +71,16 @@ public class Ending extends JPanel {
 
         homeButton.addActionListener(e -> {
             // Home 버튼 클릭 시 Main 화면으로 이동
-            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
-            frame.getContentPane().removeAll(); // 모든 컴포넌트 제거
+            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this); // 현재 Ending 패널이 포함된 JFrame 가져오기
+            frame.dispose(); // 현재 JFrame 닫기
+
+            // 새로운 JFrame 생성 및 Main 화면 표시
+            JFrame mainFrame = new JFrame("Main Screen");
+            mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            mainFrame.setSize(1440, 1024); // 창 크기 설정
             Main mainPanel = new Main(); // Main 객체 생성
-            frame.getContentPane().add(mainPanel); // Main 패널 추가
-            frame.revalidate(); // 레이아웃 재정렬
-            frame.repaint(); // 화면 갱신
+            mainFrame.getContentPane().add(mainPanel); // Main 패널 추가
+            mainFrame.setVisible(true); // 새로운 JFrame 표시
         });
 
         this.add(homeButton);

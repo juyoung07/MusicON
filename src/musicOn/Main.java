@@ -11,9 +11,9 @@ public class Main extends JFrame {
     private JPanel mainPanel;
 
     public Main() {
-        setTitle("MusicOn");
-        setSize(1440, 1024);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle("MusicOn");setSize(1440, 1024);
+        setDefaultCloseOperation
+        (JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
         cardLayout = new CardLayout();
