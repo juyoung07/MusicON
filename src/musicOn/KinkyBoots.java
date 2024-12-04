@@ -35,7 +35,7 @@ public class KinkyBoots extends JPanel implements ActionListener {
 
         // 배경 이미지 로드
         try {
-            backgroundImage = new ImageIcon("C:\\MusicON\\src\\img\\bg\\kinkybootsInGame.png").getImage();
+            backgroundImage = new ImageIcon("src/img/bg/kinkybootsInGame.png").getImage();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -67,7 +67,7 @@ public class KinkyBoots extends JPanel implements ActionListener {
         this.requestFocusInWindow();
 
         // 배경 음악 로드 및 재생
-        playBackgroundMusic("C:\\MusicON\\src\\songs\\LandOfLola.wav");
+        playBackgroundMusic("src/songs/LandOfLola.wav");
 
         // 타이머: 10ms 간격으로 동작
         timer = new Timer(10, this);
