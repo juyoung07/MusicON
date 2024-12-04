@@ -10,37 +10,34 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class KinkyBoots extends JPanel implements ActionListener {
-    private final int PANEL_WIDTH = 1440; // 화면 너비
-    private final int PANEL_HEIGHT = 1024; // 화면 높이
-    private final int BLOCK_HEIGHT = 96; // 블록 높이
-    private final int NUM_COLUMNS = 4; // 열 개수
+    private final int PANEL_WIDTH = 1440;
+    private final int PANEL_HEIGHT = 1024;
+    private final int BLOCK_HEIGHT = 96;
+    private final int NUM_COLUMNS = 4;
 
     private ArrayList<Block> blocks = new ArrayList<>();
     private Timer timer;
     private Random random = new Random();
 
-    private JLabel feedbackLabel; // 피드백 텍스트를 위한 JLabel
-    private JLabel scoreLabel; // 점수를 표시할 JLabel
-    private Image backgroundImage; // 배경 이미지
-    private Clip backgroundMusicClip; // 배경 음악 클립
+    private JLabel feedbackLabel;
+    private JLabel scoreLabel;
+    private Image backgroundImage;
+    private Clip backgroundMusicClip;
 
-    private int score = 0; // 점수 초기화
-    private boolean musicEnded = false; // 음악 종료 여부
-
-    private boolean isGameStarted = false; // 게임 시작 여부 플래그
+    private int score = 0;
+    private boolean musicEnded = false;
+    private boolean isGameStarted = false;
 
     public KinkyBoots() {
         this.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         this.setBackground(Color.BLACK);
 
-        // 배경 이미지 로드
         try {
             backgroundImage = new ImageIcon("src/img/bg/kinkybootsInGame.png").getImage();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        // 피드백을 화면에 표시할 JLabel 설정
         feedbackLabel = new JLabel("", SwingConstants.CENTER);
         feedbackLabel.setFont(new Font("DungGeunMo", Font.BOLD, 40));
         feedbackLabel.setForeground(Color.WHITE);
@@ -48,7 +45,6 @@ public class KinkyBoots extends JPanel implements ActionListener {
         this.setLayout(null);
         this.add(feedbackLabel);
 
-        // 점수 표시용 JLabel 설정
         scoreLabel = new JLabel("Score: 0", SwingConstants.CENTER);
         scoreLabel.setFont(new Font("DungGeunMo", Font.BOLD, 40));
         scoreLabel.setForeground(Color.WHITE);
@@ -62,21 +58,15 @@ public class KinkyBoots extends JPanel implements ActionListener {
         if (isGameStarted) return;
 
         isGameStarted = true;
-
-        // 포커스 요청
         this.requestFocusInWindow();
 
-        // 배경 음악 로드 및 재생
         playBackgroundMusic("src/songs/LandOfLola.wav");
 
-        // 타이머: 10ms 간격으로 동작
         timer = new Timer(10, this);
         timer.start();
 
-        // 새로운 블록을 일정 간격으로 추가하는 타이머
         new Timer(1000, e -> spawnBlock()).start();
 
-        // 키보드 입력 처리
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -85,23 +75,18 @@ public class KinkyBoots extends JPanel implements ActionListener {
         });
     }
 
-
-    // 배경 음악 재생
     private void playBackgroundMusic(String filePath) {
         try {
             File musicFile = new File(filePath);
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(musicFile);
             backgroundMusicClip = AudioSystem.getClip();
             backgroundMusicClip.open(audioStream);
-            backgroundMusicClip.start(); // 음악을 한 번만 재생
+            backgroundMusicClip.start();
 
-            // 음악이 종료되면 점수 표시
             backgroundMusicClip.addLineListener(event -> {
-                if (event.getType() == LineEvent.Type.STOP) {
-                    if (!musicEnded) {
-                        musicEnded = true;
-                        showFinalScore(); // 음악 종료 시 점수 표시
-                    }
+                if (event.getType() == LineEvent.Type.STOP && !musicEnded) {
+                    musicEnded = true;
+                    showFinalScore();
                 }
             });
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
@@ -109,7 +94,6 @@ public class KinkyBoots extends JPanel implements ActionListener {
         }
     }
 
-    // 최종 점수 화면 표시
     private void showFinalScore() {
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
         Ending endingPanel = new Ending(score);
@@ -120,16 +104,13 @@ public class KinkyBoots extends JPanel implements ActionListener {
         frame.repaint();
     }
 
-    // 블록 생성
     private void spawnBlock() {
-        int column = random.nextInt(NUM_COLUMNS); // 랜덤한 열 선택
-        int columnWidth = PANEL_WIDTH / NUM_COLUMNS; // 열 너비 계산
-        int x = column * columnWidth; // 블록의 x 좌표
-        int blockWidth = columnWidth; // 블록의 가로 크기
-        blocks.add(new Block(x, 0, column, blockWidth, BLOCK_HEIGHT));
+        int column = random.nextInt(NUM_COLUMNS);
+        int columnWidth = PANEL_WIDTH / NUM_COLUMNS;
+        int x = column * columnWidth;
+        blocks.add(new Block(x, 0, column, columnWidth, BLOCK_HEIGHT));
     }
 
-    // 키 입력 처리
     private void handleKeyPress(char key) {
         int column = -1;
         switch (key) {
@@ -166,7 +147,6 @@ public class KinkyBoots extends JPanel implements ActionListener {
         }
     }
 
-    // 피드백 텍스트와 점수 설정
     private void setFeedback(String text, int point) {
         feedbackLabel.setText(text);
         score += point;
@@ -182,20 +162,19 @@ public class KinkyBoots extends JPanel implements ActionListener {
         ArrayList<Block> toRemove = new ArrayList<>();
 
         for (Block block : blocks) {
-            block.y += 5; // 블록 이동 속도
+            block.y += 5;
         }
 
         for (Block block : blocks) {
             if (block.y > 700) {
                 toRemove.add(block);
-                setFeedback("miss", -2); // 화면을 넘어간 블록은 miss 처리
+                setFeedback("miss", -2);
             }
         }
 
         blocks.removeAll(toRemove);
         repaint();
     }
-
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -220,7 +199,7 @@ public class KinkyBoots extends JPanel implements ActionListener {
         g.setColor(Color.GREEN);
         g.drawLine(0, 700, PANEL_WIDTH, 700);
 
-        Color customColor = new Color(0xEA0010); // #FF5733 색상
+        Color customColor = new Color(0xEA0010);
         g.setColor(customColor);
 
         for (Block block : blocks) {

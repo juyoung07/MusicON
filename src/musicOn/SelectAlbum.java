@@ -3,7 +3,7 @@ package src.musicOn;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent; // KeyEvent를 import합니다.
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,23 +67,19 @@ public class SelectAlbum extends JPanel {
             currentIndex = albumKeys.indexOf(title);
 
             // 게임 패널로 전환
-            if (gamePanel != null) {
-                JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
-                frame.getContentPane().removeAll();
-                frame.getContentPane().add(gamePanel);
-                frame.revalidate();
-                frame.repaint();
+            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            frame.getContentPane().removeAll();
+            frame.getContentPane().add(gamePanel);
+            frame.revalidate();
+            frame.repaint();
 
-                // 게임 시작 호출
-                if (gamePanel instanceof Chicago) {
-                    ((Chicago) gamePanel).startGame();
-                }
-                else if (gamePanel instanceof Wicked){
-                    ((Wicked) gamePanel).startGame();
-                }
-                else if (gamePanel instanceof KinkyBoots){
-                    ((KinkyBoots) gamePanel).startGame();
-                }
+            // 게임 시작 호출
+            if (gamePanel instanceof Chicago) {
+                ((Chicago) gamePanel).startGame();
+            } else if (gamePanel instanceof Wicked) {
+                ((Wicked) gamePanel).startGame();
+            } else if (gamePanel instanceof KinkyBoots) {
+                ((KinkyBoots) gamePanel).startGame();
             }
         });
 
@@ -118,7 +114,6 @@ public class SelectAlbum extends JPanel {
 
         cardPanel.add(panel, title + "Album");
     }
-
 
     private void setupKeyBindings() {
         InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);

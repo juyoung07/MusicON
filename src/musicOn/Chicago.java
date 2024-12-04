@@ -85,7 +85,6 @@ public class Chicago extends JPanel implements ActionListener {
         });
     }
 
-
     // 배경 음악 재생
     private void playBackgroundMusic(String filePath) {
         try {
@@ -125,8 +124,7 @@ public class Chicago extends JPanel implements ActionListener {
         int column = random.nextInt(NUM_COLUMNS); // 랜덤한 열 선택
         int columnWidth = PANEL_WIDTH / NUM_COLUMNS; // 열 너비 계산
         int x = column * columnWidth; // 블록의 x 좌표
-        int blockWidth = columnWidth; // 블록의 가로 크기
-        blocks.add(new Block(x, 0, column, blockWidth, BLOCK_HEIGHT));
+        blocks.add(new Block(x, 0, column, columnWidth, BLOCK_HEIGHT));
     }
 
     // 키 입력 처리
@@ -195,7 +193,6 @@ public class Chicago extends JPanel implements ActionListener {
         blocks.removeAll(toRemove);
         repaint();
     }
-
 
     @Override
     protected void paintComponent(Graphics g) {

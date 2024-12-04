@@ -7,7 +7,6 @@ public class Ending extends JPanel {
     private final int PANEL_WIDTH = 1440; // 화면 너비
     private final int PANEL_HEIGHT = 1024; // 화면 높이
     private int finalScore; // 최종 점수
-    private Timer gifTimer; // GIF 타이머
     private Image backgroundImage; // 배경 이미지를 위한 Image 객체
     private JLabel scoreLabel; // 최종 점수 표시를 위한 JLabel
 
@@ -23,8 +22,6 @@ public class Ending extends JPanel {
         JLabel gifLabel = new JLabel();
         gifLabel.setBounds(0, 0, PANEL_WIDTH, PANEL_HEIGHT); // 패널 전체 크기로 설정
         ImageIcon gifIcon = new ImageIcon("src/img/bg/curtain.gif");
-
-        // ImageIcon 크기 조정
         Image scaledGif = gifIcon.getImage().getScaledInstance(PANEL_WIDTH, PANEL_HEIGHT, Image.SCALE_DEFAULT);
         gifLabel.setIcon(new ImageIcon(scaledGif)); // 리사이즈된 GIF 설정
         this.add(gifLabel);
@@ -38,7 +35,7 @@ public class Ending extends JPanel {
         this.add(scoreLabel);
 
         // 2초 후에 GIF 제거 및 배경 이미지 표시
-        gifTimer = new Timer(2000, e -> {
+        Timer gifTimer = new Timer(2000, e -> {
             this.remove(gifLabel); // GIF 제거
             showBackgroundImage(); // 배경 이미지 표시
             this.revalidate();
@@ -63,7 +60,7 @@ public class Ending extends JPanel {
     }
 
     private void addButtons() {
-// Home Button
+        // Home Button
         ImageIcon homeIcon = new ImageIcon("src/img/btn/BtnHome.png");
         Image homeScaled = homeIcon.getImage().getScaledInstance(105, 98, Image.SCALE_SMOOTH);
         JButton homeButton = new JButton(new ImageIcon(homeScaled));
