@@ -52,7 +52,7 @@ public class Chicago extends JPanel implements ActionListener {
         scoreLabel = new JLabel("Score: 0", SwingConstants.CENTER);
         scoreLabel.setFont(new Font("DungGeunMo", Font.BOLD, 40));
         scoreLabel.setForeground(Color.WHITE);
-        scoreLabel.setBounds(400, 25, PANEL_WIDTH, 50);
+        scoreLabel.setBounds(550, 20, PANEL_WIDTH, 50);
         this.add(scoreLabel);
 
         setFocusable(true);
