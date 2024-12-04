@@ -42,7 +42,7 @@ public class Wicked extends JPanel implements ActionListener {
 
         // 피드백을 화면에 표시할 JLabel 설정
         feedbackLabel = new JLabel("", SwingConstants.CENTER);
-        feedbackLabel.setFont(new Font("Arial", Font.BOLD, 40));
+        feedbackLabel.setFont(new Font("DungGeunMo", Font.BOLD, 40));
         feedbackLabel.setForeground(Color.WHITE);
         feedbackLabel.setBounds(0, PANEL_HEIGHT / 2, PANEL_WIDTH, 50);
         this.setLayout(null);
@@ -50,7 +50,7 @@ public class Wicked extends JPanel implements ActionListener {
 
         // 점수 표시용 JLabel 설정
         scoreLabel = new JLabel("Score: 0", SwingConstants.CENTER);
-        scoreLabel.setFont(new Font("Arial", Font.BOLD, 40));
+        scoreLabel.setFont(new Font("DungGeunMo", Font.BOLD, 40));
         scoreLabel.setForeground(Color.WHITE);
         scoreLabel.setBounds(400, 25, PANEL_WIDTH, 50);
         this.add(scoreLabel);
