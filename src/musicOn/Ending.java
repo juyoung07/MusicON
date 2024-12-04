@@ -2,82 +2,65 @@ package src.musicOn;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class Ending extends JPanel {
-    private final String GIF_PATH = "src/img/bg/curtain.gif"; // Path to your GIF file
-    private final String BG_SCORE_PATH = "src/img/bg/BgScore.png"; // Path to the score background image
-    private final int FINAL_SCORE; // The final score to display
-    private JLabel scoreLabel; // To display the score
-    private Font roundedFont; // Custom font
-    private Image background; // To hold the background image
-
-    private boolean showScoreBackground = false; // Flag to toggle between GIF and background
+    private final int PANEL_WIDTH = 1440; // 화면 너비
+    private final int PANEL_HEIGHT = 1024; // 화면 높이
+    private int finalScore; // 최종 점수
+    private Timer gifTimer; // GIF 타이머
+    private JLabel backgroundLabel; // 배경 이미지를 위한 JLabel
+    private JLabel scoreLabel; // 최종 점수 표시를 위한 JLabel
 
     public Ending(int score) {
-        this.FINAL_SCORE = score;
+        this.finalScore = score;
 
-        // Load the custom font (둥근모꼴)
-        loadRoundedFont();
+        // 패널 설정
+        this.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
+        this.setBackground(Color.BLACK);
+        this.setLayout(null);
 
-        // Load the background image
-        background = Toolkit.getDefaultToolkit().getImage(BG_SCORE_PATH);
+        // GIF 로드 및 크기 조정
+        JLabel gifLabel = new JLabel();
+        gifLabel.setBounds(0, 0, PANEL_WIDTH, PANEL_HEIGHT); // 패널 전체 크기로 설정
+        ImageIcon gifIcon = new ImageIcon("src/img/bg/curtain.gif");
 
-        // Set up the panel properties
-        this.setLayout(new BorderLayout());
+        // ImageIcon 크기 조정
+        Image scaledGif = gifIcon.getImage().getScaledInstance(PANEL_WIDTH, PANEL_HEIGHT, Image.SCALE_DEFAULT);
+        gifLabel.setIcon(new ImageIcon(scaledGif)); // 리사이즈된 GIF 설정
+        this.add(gifLabel);
 
-        // Initialize score label
-        scoreLabel = new JLabel("현재 점수: " + FINAL_SCORE, SwingConstants.CENTER);
-        scoreLabel.setFont(roundedFont.deriveFont(Font.BOLD, 50)); // Apply custom font
-        scoreLabel.setForeground(Color.BLACK);
+        // 최종 점수 표시용 JLabel 설정 (초기에는 보이지 않도록)
+        scoreLabel = new JLabel(finalScore + "점", SwingConstants.RIGHT);
+        scoreLabel.setFont(new Font("DungGeunMo", Font.BOLD, 100));
+        scoreLabel.setForeground(Color.WHITE);
+        scoreLabel.setBounds(823, 130, 400, 200); // 오른쪽 위에 배치
+        scoreLabel.setVisible(false); // 초기에는 숨김
+        this.add(scoreLabel);
 
-        // Display the GIF first
-        showGif();
-    }
-
-    // Show GIF on the panel
-    private void showGif() {
-        // Create a JLabel to display the GIF
-        JLabel gifLabel = new JLabel(new ImageIcon(GIF_PATH));
-        this.add(gifLabel, BorderLayout.CENTER);
-
-        // Set a timer to switch to the background image after GIF finishes
-        Timer timer = new Timer(2000, new ActionListener() { // Assuming GIF duration is 2 seconds
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                remove(gifLabel); // Remove the GIF
-                showScoreBackground = true; // Set flag to show the score background
-                add(scoreLabel, BorderLayout.CENTER); // Add score label
-                revalidate();
-                repaint();
-            }
+        // 2초 후에 GIF 제거 및 배경 이미지 표시
+        gifTimer = new Timer(2000, e -> {
+            this.remove(gifLabel); // GIF 제거
+            showBackgroundImage(); // 배경 이미지 표시
+            this.revalidate();
+            this.repaint();
         });
-        timer.setRepeats(false);
-        timer.start();
+        gifTimer.setRepeats(false);
+        gifTimer.start();
     }
 
-    // Paint the background image
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        if (showScoreBackground && background != null) {
-            g.drawImage(background, 0, 0, getWidth(), getHeight(), this);
-        }
-    }
+    // 배경 이미지 표시 메서드
+    private void showBackgroundImage() {
+        // 배경 이미지 로드
+        ImageIcon backgroundImage = new ImageIcon("src/img/bg/BgScore.png"); // 배경 이미지 경로 설정
+        backgroundLabel = new JLabel(backgroundImage);
+        backgroundLabel.setBounds(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
+        this.add(backgroundLabel, 0); // 배경 이미지를 가장 아래에 추가
 
-    // Load 둥근모꼴 font
-    private void loadRoundedFont() {
-        try {
-            // Assuming the font file is located at "src/font/rounded.ttf"
-            File fontFile = new File("src/font/DungGeunMo.ttf");
-            roundedFont = Font.createFont(Font.TRUETYPE_FONT, fontFile);
-        } catch (FontFormatException | IOException e) {
-            e.printStackTrace();
-            // Fallback to default font if custom font fails to load
-            roundedFont = new Font("DungGeunMo", Font.PLAIN, 12);
-        }
+        // 점수 표시를 다시 보이도록 설정
+        scoreLabel.setVisible(true);
+        this.setComponentZOrder(scoreLabel, 0); // 점수를 최상위로 설정
+        this.setComponentZOrder(backgroundLabel, 1); // 배경을 그 아래로 설정
+        this.revalidate();
+        this.repaint();
     }
 }
