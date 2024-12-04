@@ -8,7 +8,7 @@ public class Ending extends JPanel {
     private final int PANEL_HEIGHT = 1024; // 화면 높이
     private int finalScore; // 최종 점수
     private Timer gifTimer; // GIF 타이머
-    private JLabel backgroundLabel; // 배경 이미지를 위한 JLabel
+    private Image backgroundImage; // 배경 이미지를 위한 Image 객체
     private JLabel scoreLabel; // 최종 점수 표시를 위한 JLabel
 
     public Ending(int score) {
@@ -33,7 +33,7 @@ public class Ending extends JPanel {
         scoreLabel = new JLabel(finalScore + "점", SwingConstants.RIGHT);
         scoreLabel.setFont(new Font("DungGeunMo", Font.BOLD, 100));
         scoreLabel.setForeground(Color.WHITE);
-        scoreLabel.setBounds(823, 130, 400, 200); // 오른쪽 위에 배치
+        scoreLabel.setBounds(823, 85, 400, 200); // 오른쪽 위에 배치
         scoreLabel.setVisible(false); // 초기에는 숨김
         this.add(scoreLabel);
 
@@ -51,16 +51,51 @@ public class Ending extends JPanel {
     // 배경 이미지 표시 메서드
     private void showBackgroundImage() {
         // 배경 이미지 로드
-        ImageIcon backgroundImage = new ImageIcon("src/img/bg/BgScore.png"); // 배경 이미지 경로 설정
-        backgroundLabel = new JLabel(backgroundImage);
-        backgroundLabel.setBounds(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
-        this.add(backgroundLabel, 0); // 배경 이미지를 가장 아래에 추가
+        backgroundImage = new ImageIcon("src/img/bg/BgScore.png").getImage(); // 배경 이미지를 Image 객체로 로드
+
+        // 배경 이미지를 그리기 전에 버튼들을 먼저 그리기 위해 버튼 추가
+        addButtons();
 
         // 점수 표시를 다시 보이도록 설정
         scoreLabel.setVisible(true);
-        this.setComponentZOrder(scoreLabel, 0); // 점수를 최상위로 설정
-        this.setComponentZOrder(backgroundLabel, 1); // 배경을 그 아래로 설정
         this.revalidate();
         this.repaint();
+    }
+
+    private void addButtons() {
+        // Home Button
+        ImageIcon homeIcon = new ImageIcon("src/img/btn/BtnHome.png");
+        Image homeScaled = homeIcon.getImage().getScaledInstance(105, 98, Image.SCALE_SMOOTH); // 크기 변경
+        JButton homeButton = new JButton(new ImageIcon(homeScaled));
+        homeButton.setBorderPainted(false);
+        homeButton.setContentAreaFilled(false);
+        homeButton.setFocusPainted(false);
+        homeButton.setBounds(1290, 650, 105, 98);
+        homeButton.addActionListener(e -> {
+            // Add home button functionality here
+        });
+        this.add(homeButton);
+
+        // Retry Button
+        ImageIcon retryIcon = new ImageIcon("src/img/btn/BtnRetry.png");
+        Image retryScaled = retryIcon.getImage().getScaledInstance(105, 98, Image.SCALE_SMOOTH); // 크기 변경
+        JButton retryButton = new JButton(new ImageIcon(retryScaled));
+        retryButton.setBorderPainted(false);
+        retryButton.setContentAreaFilled(false);
+        retryButton.setFocusPainted(false);
+        retryButton.setBounds(1150, 650, 105, 98);
+        retryButton.addActionListener(e -> {
+            // Add retry button functionality here
+        });
+        this.add(retryButton);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (backgroundImage != null) {
+            // 이미지를 화면 크기에 맞게 조정하여 그리기
+            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+        }
     }
 }
