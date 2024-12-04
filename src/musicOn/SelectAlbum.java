@@ -92,24 +92,33 @@ public class SelectAlbum extends JPanel {
 
         // 앨범 정보 표시
         JLabel titleLabel = new JLabel(title, SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Serif", Font.PLAIN, 60));
+        titleLabel.setFont(new Font("DungGeunMo", Font.PLAIN, 60));
         titleLabel.setForeground(Color.WHITE);
 
         JLabel songLabel = new JLabel(song, SwingConstants.CENTER);
-        songLabel.setFont(new Font("Serif", Font.BOLD, 90));
+        songLabel.setFont(new Font("DungGeunMo", Font.BOLD, 90));
         songLabel.setForeground(Color.WHITE);
 
-        JPanel labelPanel = new JPanel();
-        labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.Y_AXIS));
+        // 중앙 정렬을 위해 GridBagLayout 사용
+        JPanel labelPanel = new JPanel(new GridBagLayout());
         labelPanel.setOpaque(false);
-        labelPanel.add(titleLabel);
-        labelPanel.add(songLabel);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(10, 10, 10, 10); // 텍스트 간격 조정
+
+        labelPanel.add(titleLabel, gbc);
+
+        gbc.gridy = 1;
+        labelPanel.add(songLabel, gbc);
 
         panel.add(albumButton, BorderLayout.CENTER);
-        panel.add(labelPanel, BorderLayout.SOUTH);
+        panel.add(labelPanel, BorderLayout.SOUTH); // 화면 중앙에 위치하도록 설정
 
         cardPanel.add(panel, title + "Album");
     }
+
 
     private void setupKeyBindings() {
         InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
