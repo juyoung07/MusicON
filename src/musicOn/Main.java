@@ -11,7 +11,7 @@ public class Main extends JFrame {
     private JPanel mainPanel;
 
     public Main() {
-        setTitle("MusicOn");setSize(1440, 1024);
+        setTitle("MusicOn");setSize(1440, 840);
         setDefaultCloseOperation
         (JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
