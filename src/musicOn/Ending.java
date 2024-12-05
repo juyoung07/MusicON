@@ -2,6 +2,7 @@ package src.musicOn;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class Ending extends JPanel {
     private final int PANEL_WIDTH = 1440; // 화면 너비
@@ -9,9 +10,14 @@ public class Ending extends JPanel {
     private int finalScore; // 최종 점수
     private Image backgroundImage; // 배경 이미지를 위한 Image 객체
     private JLabel scoreLabel; // 최종 점수 표시를 위한 JLabel
+    private String tableName; // 게임 테이블 이름
+    private Database db;
+    private JLabel rankingLabel;
 
-    public Ending(int score) {
+    public Ending(int score, String tableName) {
         this.finalScore = score;
+        this.tableName = tableName;
+        db = new Database();
 
         // 패널 설정
         this.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
@@ -43,6 +49,23 @@ public class Ending extends JPanel {
         });
         gifTimer.setRepeats(false);
         gifTimer.start();
+
+        // 랭킹 라벨 추가
+        rankingLabel = new JLabel(getRankingString(), SwingConstants.CENTER);
+        rankingLabel.setFont(new Font("DungGeunMo", Font.BOLD, 80));
+        rankingLabel.setForeground(Color.WHITE);
+        rankingLabel.setBounds(500, 400, 400, 300); // 위치는 적절히 조정
+        this.add(rankingLabel);
+    }
+
+    private String getRankingString() {
+        ArrayList<Integer> topScores = db.getTop5Scores(tableName);
+        StringBuilder sb = new StringBuilder("<html><center><br>");
+        for (int i = 0; i < topScores.size(); i++) {
+            sb.append(i + 1).append(". ").append(topScores.get(i)).append("<br>");
+        }
+        sb.append("</center></html>");
+        return sb.toString();
     }
 
     // 배경 이미지 표시 메서드

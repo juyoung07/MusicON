@@ -101,8 +101,17 @@ public class Wicked extends JPanel implements ActionListener {
 
     // 최종 점수 화면 표시
     private void showFinalScore() {
+        Database db = new Database();
+        try {
+            db.saveScore("wicked", score); // 점수 저장
+            System.out.println("점수 저장 완료: " + score);
+
+        } catch (Exception e) {
+            System.out.println("점수 저장 실패: " + e.getMessage());
+        }
+
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
-        Ending endingPanel = new Ending(score);
+        Ending endingPanel = new Ending(score, "wicked");
 
         frame.getContentPane().removeAll();
         frame.getContentPane().add(endingPanel);

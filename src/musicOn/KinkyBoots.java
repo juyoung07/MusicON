@@ -95,8 +95,17 @@ public class KinkyBoots extends JPanel implements ActionListener {
     }
 
     private void showFinalScore() {
+        Database db = new Database();
+        try {
+            db.saveScore("kinkyboots", score); // 점수 저장
+            System.out.println("점수 저장 완료: " + score);
+
+        } catch (Exception e) {
+            System.out.println("점수 저장 실패: " + e.getMessage());
+        }
+
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
-        Ending endingPanel = new Ending(score);
+        Ending endingPanel = new Ending(score, "kinkyboots");
 
         frame.getContentPane().removeAll();
         frame.getContentPane().add(endingPanel);
